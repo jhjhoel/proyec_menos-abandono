@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menos abandono, más oportunidades | Simulador EDO</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#64748b;--blue:#2457c5;--teal:#0f8b78;--orange:#d97706;--line:#e2e8f0;--soft:#edf3ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(120deg,#142b57,#2457c5);color:white;padding:34px 20px}
+.wrap{max-width:1150px;margin:auto;padding:0 18px}header .tag{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;opacity:.8}h1{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.12;margin:8px 0}header p{max-width:780px;color:#e3eaff;margin:10px 0 0}
+main{padding:24px 0 50px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:17px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 5px 18px #13254b0a}.span12{grid-column:span 12}.span8{grid-column:span 8}.span4{grid-column:span 4}.span6{grid-column:span 6}
+h2{font-size:1.18rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 8px}.muted{color:var(--muted)}.small{font-size:.86rem}.pill{display:inline-block;background:#e7efff;color:#204a9c;padding:4px 10px;border-radius:99px;font-size:.76rem;font-weight:700}
+.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}label{display:block;font-size:.84rem;font-weight:650;margin-bottom:5px}input{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:11px;font:inherit;background:white;color:var(--ink)}button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);color:white;font-weight:700;font:inherit;cursor:pointer;margin-top:14px}button:hover{filter:brightness(.94)}.secondary{background:#e8eefb;color:#23468d}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.kpi{background:#f8faff;border:1px solid var(--line);border-radius:12px;padding:14px}.kpi strong{font-size:1.5rem;display:block}.kpi span{font-size:.8rem;color:var(--muted)}
+.equation{background:#f3f7ff;border:1px solid #d9e5ff;border-radius:12px;padding:14px;text-align:center;font-family:Georgia,serif;font-size:1.12rem;margin:10px 0}
+.tablewrap{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;font-size:.84rem;white-space:nowrap}th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}th{background:#f1f5fb;position:sticky;top:0;z-index:1}th:first-child,td:first-child{text-align:center}
+canvas{width:100%;height:340px;display:block}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:.82rem;margin:8px 0}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.note{background:#fff8e8;border-left:4px solid #e6a23c;padding:12px 14px;border-radius:8px}.good{background:#ecfdf5;border-left:4px solid #0f9b6c;padding:12px 14px;border-radius:8px}
+footer{text-align:center;color:var(--muted);padding:24px;font-size:.82rem}
+@media(max-width:800px){.span8,.span4,.span6{grid-column:span 12}.formgrid{grid-template-columns:repeat(2,1fr)}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:430px){.formgrid{grid-template-columns:1fr 1fr}.card{padding:15px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="tag">Métodos numéricos · Proyecto académico</div>
+<h1>Menos abandono, más oportunidades</h1>
+<p>Simulador de una ecuación diferencial para estudiar cómo un programa hipotético de acompañamiento académico podría reducir la cantidad de estudiantes que permanecen en situación de riesgo de abandono.</p>
+</div></header>
+<main class="wrap">
+<div class="grid">
+<section class="card span12">
+<h2>1. Problema y objetivo</h2>
+<p>Algunos estudiantes presentan dificultades académicas, económicas o personales que pueden poner en riesgo la continuidad de sus estudios. Este proyecto representa, mediante un modelo matemático sencillo, la disminución de estudiantes que permanecen en esa situación durante un programa de acompañamiento.</p>
+<div class="note small"><b>Alcance:</b> los parámetros iniciales son hipotéticos. El modelo describe la salida de la condición de riesgo; no demuestra por sí solo que cada estudiante permanezca matriculado ni constituye una predicción basada en datos reales.</div>
+<p><b>Pregunta:</b> ¿Cómo puede un programa de acompañamiento académico reducir la cantidad de estudiantes en situación de riesgo durante ocho semanas?</p>
+<p><b>Meta del escenario inicial:</b> reducir de 100 a 50 estudiantes en riesgo en ocho semanas.</p>
+</section>
+
+<section class="card span12">
+<h2>2. Parámetros de simulación</h2>
+<div class="formgrid">
+<div><label for="y0">Cantidad inicial y₀ (estudiantes)</label><input id="y0" type="number" min="0.01" step="any" value="100"></div>
+<div><label for="k">Tasa k (por semana)</label><input id="k" type="number" min="0" step="any" value="0.08664339757"></div>
+<div><label for="T">Tiempo final (semanas)</label><input id="T" type="number" min="0.01" step="any" value="8"></div>
+<div><label for="h">Tamaño de paso h (semanas)</label><input id="h" type="number" min="0.001" step="any" value="1"></div>
+</div>
+<button id="run">Ejecutar simulación</button>
+<button id="reset" class="secondary">Restablecer valores iniciales</button>
+<p class="muted small">Para comparar precisión, ejecuta primero con h = 1 y luego con h = 0.5. El tiempo final debe ser múltiplo del paso h.</p>
+<div id="error" role="alert" class="note" style="display:none;margin-top:12px"></div>
+</section>
+
+<section class="card span12">
+<h2>3. Modelo matemático y solución analítica</h2>
+<div class="equation">dy/dt = −ky, &nbsp; y(0) = y₀</div>
+<p><b>Variables:</b> y(t) = estudiantes que permanecen en situación de riesgo (estudiantes); t = tiempo (semanas). <b>Parámetro:</b> k = tasa de disminución (semana⁻¹).</p>
+<p><b>Separación de variables:</b></p>
+<div class="equation">dy/y = −k dt → ln|y| = −kt + C → y = Ce<sup>−kt</sup></div>
+<p>Con y(0) = y₀ se obtiene C = y₀. Por tanto:</p>
+<div class="equation"><b>y(t) = y₀ e<sup>−kt</sup></b></div>
+<p>Para los valores iniciales y₀ = 100 y k = ln(2)/8 = 0.08664339757 semana⁻¹, la solución es y(t) = 100e<sup>−0.08664339757t</sup>. Su derivada es y′(t) = −ky(t), y al evaluar t = 0 se obtiene y(0) = 100; así se verifican la EDO y la condición inicial.</p>
+</section>
+
+<section class="card span12">
+<h2>4. Resultados principales</h2>
+<div class="kpis">
+<div class="kpi"><span>Valor inicial</span><strong id="outY0">100</strong><span>estudiantes</span></div>
+<div class="kpi"><span>Valor exacto final</span><strong id="outExact">50</strong><span>estudiantes</span></div>
+<div class="kpi"><span>Heun al final</span><strong id="outHeun">—</strong><span>estudiantes</span></div>
+<div class="kpi"><span>RK4 al final</span><strong id="outRK4">—</strong><span>estudiantes</span></div>
+</div>
+<p id="interpretation" class="good" style="margin-top:14px">Ejecuta la simulación para ver la interpretación.</p>
+</section>
+
+<section class="card span12">
+<h2>5. Gráfica comparativa</h2>
+<div class="legend"><span><i class="dot" style="background:#2457c5"></i>Analítica</span><span><i class="dot" style="background:#d97706"></i>Heun (RK2)</span><span><i class="dot" style="background:#0f8b78"></i>RK4</span></div>
+<canvas id="chart" width="1050" height="360" aria-label="Gráfica de soluciones analítica, Heun y RK4"></canvas>
+<p class="muted small">La gráfica muestra la solución exacta y las aproximaciones numéricas para el paso seleccionado.</p>
+</section>
+
+<section class="card span12">
+<h2>6. Tabla comparativa por iteraciones</h2>
+<div class="tablewrap"><table><thead><tr><th>n</th><th>t (sem)</th><th>Analítica</th><th>Heun</th><th>Error abs. Heun</th><th>Error % Heun</th><th>RK4</th><th>Error abs. RK4</th><th>Error % RK4</th></tr></thead><tbody id="rows"></tbody></table></div>
+<p class="muted small">Error absoluto = |valor exacto − aproximación|. Error relativo porcentual = (error absoluto / |valor exacto|) × 100. Si el valor exacto es cero, el error relativo porcentual no se define.</p>
+</section>
+
+<section class="card span6">
+<h2>7. Método de Heun (RK2)</h2>
+<div class="equation">k₁ = f(tₙ,yₙ)<br>k₂ = f(tₙ+h,yₙ+hk₁)<br>yₙ₊₁ = yₙ + (h/2)(k₁+k₂)</div>
+<p class="small">Heun calcula una pendiente inicial, predice el siguiente valor y corrige usando el promedio de las pendientes inicial y final.</p>
+</section>
+<section class="card span6">
+<h2>8. Método clásico RK4</h2>
+<div class="equation">k₁=f(tₙ,yₙ)<br>k₂=f(tₙ+h/2,yₙ+hk₁/2)<br>k₃=f(tₙ+h/2,yₙ+hk₂/2)<br>k₄=f(tₙ+h,yₙ+hk₃)<br>yₙ₊₁=yₙ+(h/6)(k₁+2k₂+2k₃+k₄)</div>
+<p class="small">RK4 combina cuatro pendientes por paso y normalmente ofrece mayor precisión que Heun para este problema suave.</p>
+</section>
+
+<section class="card span12">
+<h2>9. Comparación de tamaños de paso</h2>
+<p>La siguiente tabla calcula el error al final del intervalo usando h y h/2, manteniendo iguales los demás parámetros.</p>
+<div class="tablewrap"><table><thead><tr><th>Método</th><th>Paso</th><th>Valor final</th><th>Error absoluto</th><th>Error relativo %</th></tr></thead><tbody id="stepRows"></tbody></table></div>
+</section>
+
+<section class="card span12">
+<h2>10. Interpretación y conclusiones</h2>
+<div id="conclusion" class="good">La interpretación aparecerá al ejecutar la simulación.</div>
+<p><b>Limitaciones:</b> el modelo supone una tasa proporcional constante; no representa entradas nuevas al grupo de riesgo, diferencias individuales, interrupciones del programa ni factores externos. La cantidad calculada puede ser decimal porque se trata de una aproximación continua; para comunicar personas se puede redondear, pero los cálculos deben conservar decimales.</p>
+</section>
+</div>
+</main>
+<footer>Proyecto académico de Métodos Numéricos · EDO de primer orden · Heun y RK4</footer>
+<script>
+const $ = id => document.getElementById(id);
+const f = (t,y,k) => -k*y;
+const exact = (t,y0,k) => y0*Math.exp(-k*t);
+function solve(method,y0,k,T,h){
+ const n=Math.round(T/h), out=[]; let y=y0,t=0;
+ for(let i=0;i<=n;i++){
+  const ex=exact(t,y0,k), ea=Math.abs(ex-y), er=ex===0?null:ea/Math.abs(ex)*100;
+  out.push({i,t,ex,y,ea,er});
+  if(i===n) break;
+  if(method==='Heun'){
+   const k1=f(t,y,k), yp=y+h*k1, k2=f(t+h,yp,k);
+   y=y+h*(k1+k2)/2;
+  }else{
+   const k1=f(t,y,k), k2=f(t+h/2,y+h*k1/2,k), k3=f(t+h/2,y+h*k2/2,k), k4=f(t+h,y+h*k3,k);
+   y=y+h*(k1+2*k2+2*k3+k4)/6;
+  }
+  t=(i+1)*h;
+ }
+ return out;
+}
+const fmt=(v,d=6)=>Number(v).toFixed(d);
+function drawChart(a,b,c,T,y0){
+ const cv=$('chart'),ctx=cv.getContext('2d'),w=cv.width,h=cv.height;
+ ctx.clearRect(0,0,w,h); const left=65,right=20,top=20,bottom=48,pw=w-left-right,ph=h-top-bottom;
+ const maxY=Math.max(y0,...a.map(r=>r.ex))*1.08;
+ ctx.strokeStyle='#dbe3ef';ctx.lineWidth=1;ctx.font='13px system-ui';ctx.fillStyle='#64748b';
+ for(let j=0;j<=5;j++){let y=top+ph*j/5;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right,y);ctx.stroke();ctx.fillText(fmt(maxY*(1-j/5),1),8,y+4)}
+ for(let j=0;j<=4;j++){let x=left+pw*j/4;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,top+ph);ctx.stroke();ctx.fillText(fmt(T*j/4,1),x-10,h-18)}
+ ctx.fillText('Tiempo (semanas)',w/2-55,h-3);
+ function line(data,key,color){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=3;data.forEach((r,i)=>{let x=left+pw*r.t/T,y=top+ph*(1-r[key]/maxY);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}
+ line(a,'ex','#2457c5');line(b,'y','#d97706');line(c,'y','#0f8b78');
+}
+function run(){
+ const y0=Number($('y0').value),k=Number($('k').value),T=Number($('T').value),h=Number($('h').value);
+ const err=$('error');err.style.display='none';
+ if(!(y0>0)||!(k>=0)||!(T>0)||!(h>0)||![y0,k,T,h].every(Number.isFinite)){err.textContent='Revisa los datos: y₀ debe ser mayor que 0; k no puede ser negativa; T y h deben ser positivos.';err.style.display='block';return}
+ const ratio=T/h,n=Math.round(ratio);
+ if(Math.abs(ratio-n)>1e-8||n>2000){err.textContent='El tiempo final T debe ser múltiplo de h y el número de pasos no debe superar 2000. Prueba, por ejemplo, T = 8 y h = 1 o 0.5.';err.style.display='block';return}
+ const H=solve('Heun',y0,k,T,h),R=solve('RK4',y0,k,T,h);
+ $('outY0').textContent=fmt(y0,2);$('outExact').textContent=fmt(exact(T,y0,k),4);$('outHeun').textContent=fmt(H.at(-1).y,4);$('outRK4').textContent=fmt(R.at(-1).y,4);
+ const rows=H.map((r,i)=>`<tr><td>${r.i}</td><td>${fmt(r.t,3)}</td><td>${fmt(r.ex,6)}</td><td>${fmt(r.y,6)}</td><td>${fmt(r.ea,8)}</td><td>${r.er===null?'No definido':fmt(r.er,6)+'%'}</td><td>${fmt(R[i].y,6)}</td><td>${fmt(R[i].ea,8)}</td><td>${R[i].er===null?'No definido':fmt(R[i].er,6)+'%'}</td></tr>`).join('');
+ $('rows').innerHTML=rows;drawChart(H,H,R,T,y0);
+ const hf=H.at(-1),rf=R.at(-1),ex=exact(T,y0,k);
+ $('interpretation').textContent=`Al cabo de ${T} semanas, el modelo exacto estima ${fmt(ex,3)} estudiantes todavía en situación de riesgo, frente a ${fmt(y0-ex,3)} que habrían salido de esa condición. Con h = ${h}, Heun aproxima ${fmt(hf.y,6)} y RK4 aproxima ${fmt(rf.y,6)}. Son resultados de un escenario hipotético, no datos observados.`;
+ const half=h/2, H2=solve('Heun',y0,k,T,half).at(-1),R2=solve('RK4',y0,k,T,half).at(-1);
+ $('stepRows').innerHTML=[
+ ['Heun',h,hf],['Heun',half,H2],['RK4',h,rf],['RK4',half,R2]
+ ].map(([m,step,r])=>`<tr><td>${m}</td><td>${fmt(step,4)}</td><td>${fmt(r.y,8)}</td><td>${fmt(r.ea,10)}</td><td>${fmt(r.er,8)}%</td></tr>`).join('');
+ const best=rf.ea<=hf.ea?'RK4':'Heun';
+ $('conclusion').textContent=`En este escenario, la solución analítica al final del periodo es ${fmt(ex,4)} estudiantes. Con el paso seleccionado, ${best} presenta el menor error absoluto. Al reducir el tamaño de paso de ${h} a ${half}, las aproximaciones mejoran. Esto permite concluir que, para esta EDO y estos parámetros, RK4 ofrece una aproximación más precisa que Heun. El modelo ayuda a comprender un posible comportamiento del programa de acompañamiento, pero debe contrastarse con datos reales antes de utilizarse para tomar decisiones institucionales.`;
+}
+$('run').addEventListener('click',run);
+$('reset').addEventListener('click',()=>{$('y0').value=100;$('k').value=(Math.log(2)/8).toPrecision(12);$('T').value=8;$('h').value=1;run()});
+run();
+</script>
+</body></html>
